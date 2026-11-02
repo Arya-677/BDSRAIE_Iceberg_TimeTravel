@@ -1,0 +1,63 @@
+# Central configuration. Anything that affects training data or results lives here
+# so it can be recorded in the model registry.
+catalog:
+  name: lake
+  type: hadoop                      # hadoop | jdbc | rest (hadoop is fine for local dev)
+  warehouse: ./warehouse
+  iceberg_version: "1.5.2"          # PIN: must match your Spark/Scala build (iceberg-spark-runtime-3.5_2.12)
+  spark_minor: "3.5"
+  scala: "2.12"
+
+tables:
+  loans: lake.credit.loans
+  registry: lake.ml.model_registry
+  status_events: lake.ml.model_status_events
+  ingest_log: lake.ml.ingest_log
+  rollback_log: lake.ml.rollback_log
+
+data:
+  source_csv: data/raw/accepted_2007_to_2018Q4.csv    # or a synthetic file from `ttml gen-data`
+  features_allowlist: conf/features_allowlist.txt
+  csv_multiline: true               # real LendingClub text fields contain newlines; false = faster if yours has none
+  start_month: "2012-01"            # inclusive; develop on a slice, widen later
+  end_month: "2016-12"              # inclusive
+
+validation:                         # ingest gate thresholds (see ttml/validation.py)
+  min_rows: 50
+  max_null_rate: 0.05
+  label_rate_min: 0.01
+  label_rate_max: 0.60
+  int_rate_min: 0.0
+  int_rate_max: 40.0
+  max_duplicate_ids: 0
+
+table_properties:
+  write_mode: copy-on-write         # copy-on-write | merge-on-read (varied in storage experiments)
+  expire_max_snapshot_age_ms: 2592000000    # 30 days
+  expire_min_snapshots_to_keep: 10
+
+training:
+  model_prefix: credit-lgbm
+  train_end: "2015-12-31"           # time-based split (real 2012-2016 slice: train through 2015, test on 2016): issue_d <= train_end is train, later months are test
+  data_filter: "1 = 1"              # extra SQL predicate applied to the pinned snapshot
+  seed: 42
+  artifacts_dir: artifacts
+  experiment_retention_days: 90     # tier 2: tag lifetime for candidate models
+  require_clean_git: false          # true: refuse to approve/deploy a model trained from uncommitted code
+  release_retention_days: 2555      # tier 1: PLACEHOLDER (~7 years). Confirm the real requirement.
+  params:                           # fully deterministic LightGBM settings (see ttml/train.py)
+    n_estimators: 200
+    learning_rate: 0.05
+    num_leaves: 31
+    min_child_samples: 20
+    subsample: 1.0
+    colsample_bytree: 1.0
+    reg_lambda: 1.0
+
+retention:
+  routine_days: 30                  # tier 3: untagged snapshots older than this may be expired
+  retain_last: 10
+  orphan_days: 3                    # remove_orphan_files safety margin
+
+ingest:
+  log_table_fingerprint: true       # fingerprint the whole table after each month (needed to PROVE rollback); false for huge loads
