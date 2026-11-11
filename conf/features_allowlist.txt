@@ -1,0 +1,25 @@
+# Origination-time features ONLY (known when the loan was approved).
+# Reviewed for leakage: nothing recorded after issuance (payments, recoveries, last_pymnt_d, out_prncp, ...).
+# Changing this file changes feature_list_sha256 in the model registry.
+# Every name below exists in the LendingClub extract this project was checked against (see tests/test_user_dataset_sample.py).
+# The credit-score columns (fico_range_low/high) are NOT used: that extract does not contain them.
+loan_amnt
+term
+int_rate
+installment
+grade
+emp_length
+home_ownership
+annual_inc
+verification_status
+purpose
+dti
+delinq_2yrs
+inq_last_6mths
+open_acc
+pub_rec
+revol_bal
+revol_util
+total_acc
+# Deliberately excluded: addr_state and zip_code (geographic proxies), emp_title/title/desc (free text),
+# and every post-origination field (total_pymnt, recoveries, last_pymnt_d, out_prncp, loan_status, ...).
