@@ -1,0 +1,360 @@
+{
+  "started": "2026-11-11T17:02:52Z",
+  "engine": "iceberg",
+  "months": [
+    "2015-01",
+    "2015-02",
+    "2015-03",
+    "2015-04",
+    "2015-05",
+    "2015-06",
+    "2015-07",
+    "2015-08",
+    "2015-09",
+    "2015-10",
+    "2015-11",
+    "2015-12",
+    "2016-01",
+    "2016-02"
+  ],
+  "poisoned_batch": "2016-01",
+  "dataset": {
+    "kind": "synthetic",
+    "path": "/Users/arya/Downloads/iceberg-ml-timetravel/reports/demo_synthetic.csv",
+    "sha256": "be0eb214aec29231059efcdc2644bd945d33ba89b02de1e09829915e87b6b525",
+    "rows_in_demo_months": 10315
+  },
+  "ingest_first_9_months": {
+    "snapshots": 9,
+    "head": 7431652255220510690
+  },
+  "v1": {
+    "model_version": "v1",
+    "snapshot_id": 7431652255220510690,
+    "fingerprint": {
+      "rows": 6628,
+      "hash": "-605161576688312285794"
+    },
+    "metrics": {
+      "auc": 0.6483641484905388,
+      "ks": 0.24247375896769224,
+      "rows_train": 4403,
+      "rows_test": 2225,
+      "base_rate_test": 0.07235955056179776,
+      "x_train_sha256": "9950fad3a4c2cfc318b23f84c1890707c53c8a9c675638e17aa3b5cf8e660b89",
+      "test_pred_sha256": "d4665f2ba6b4c578dc1df2ade0669909919e10eecd81e901e81a08372dcc32a9"
+    },
+    "artifact_uri": "/Users/arya/Downloads/iceberg-ml-timetravel/artifacts/v1/model.txt",
+    "artifact_sha256": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607"
+  },
+  "v2": {
+    "model_version": "v2",
+    "snapshot_id": 82184083117057911,
+    "fingerprint": {
+      "rows": 8849,
+      "hash": "-675267512289126839069"
+    },
+    "metrics": {
+      "auc": 0.6553426418631035,
+      "ks": 0.24806080860273394,
+      "rows_train": 4403,
+      "rows_test": 4446,
+      "base_rate_test": 0.07062528115159694,
+      "x_train_sha256": "9950fad3a4c2cfc318b23f84c1890707c53c8a9c675638e17aa3b5cf8e660b89",
+      "test_pred_sha256": "4156e061fde461e505598d14198f38b6fc8353a8af71403958476409dcb5e3ca"
+    },
+    "artifact_uri": "/Users/arya/Downloads/iceberg-ml-timetravel/artifacts/v2/model.txt",
+    "artifact_sha256": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607"
+  },
+  "v1_vs_v2_differ": true,
+  "head_after_more_months": 82184083117057911,
+  "exact_retrain": {
+    "a": "v1",
+    "b": "v1-retrain",
+    "snapshot_a": 7431652255220510690,
+    "snapshot_b": 7431652255220510690,
+    "L1_same_data": true,
+    "L2_identical_predictions": true,
+    "L3_identical_model_file": true,
+    "fingerprint_a": {
+      "rows": 6628,
+      "hash": "-605161576688312285794"
+    },
+    "fingerprint_b": {
+      "rows": 6628,
+      "hash": "-605161576688312285794"
+    },
+    "artifact_sha_a": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607",
+    "artifact_sha_b": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607",
+    "max_abs_pred_diff": 0.0,
+    "n_probe": 5000
+  },
+  "negative_control": {
+    "fingerprint_head": {
+      "rows": 8849,
+      "hash": "-72445503704316432830"
+    },
+    "fingerprint_v1": {
+      "rows": 6628,
+      "hash": "-605161576688312285794"
+    },
+    "differs": true
+  },
+  "v3_tainted": {
+    "model_version": "v3",
+    "snapshot_id": 3902170148261100002,
+    "fingerprint": {
+      "rows": 10315,
+      "hash": "-847015714686936129990"
+    },
+    "metrics": {
+      "auc": 0.7136289690511161,
+      "ks": 0.3681505533564731,
+      "rows_train": 8849,
+      "rows_test": 1466,
+      "base_rate_test": 0.3049113233287858,
+      "x_train_sha256": "3d7efe8e594af6e67f6305f734962f30566cf4bd67eb690ab1a2cb4092d88d30",
+      "test_pred_sha256": "ccc09300ce9d50a99b54d54bd8d5d8bae913cfc6b90e9b10d130c521acdfd86c"
+    },
+    "artifact_uri": "/Users/arya/Downloads/iceberg-ml-timetravel/artifacts/v3/model.txt",
+    "artifact_sha256": "87366c85e06cb2517ee33e2ba7946ede65021268411913cdc93812f81f364f67"
+  },
+  "audit_flagged": [
+    {
+      "batch": "2016-01",
+      "rows": 735,
+      "label_rate": 0.5142857142857142,
+      "int_rate_mean": 1565.7564625850341,
+      "int_rate_max": 2809.0,
+      "dup_ids": 0,
+      "why": "label_rate 0.514 is 11 robust-sigma from median 0.0755; int_rate_mean 1.57e+03 is 988 robust-sigma from median 15.7; int_rate max 2.81e+03 > 40",
+      "snapshot_id": 1509460453278300479
+    }
+  ],
+  "audit_other_flags": [],
+  "rollback": {
+    "rolled_back_to": 82184083117057911,
+    "from": 3902170148261100002,
+    "models_quarantined": [
+      "v3"
+    ],
+    "head_fingerprint": {
+      "rows": 8849,
+      "hash": "-72445503704316432830"
+    },
+    "fingerprint_matches_logged_good_state": true,
+    "head_equals_pre_incident_fingerprint": true,
+    "bad_snapshot_still_listed": true
+  },
+  "status_v3": "quarantined",
+  "v4_clean": {
+    "model_version": "v4",
+    "snapshot_id": 47185582335540035,
+    "fingerprint": {
+      "rows": 10315,
+      "hash": "-799569694128029089527"
+    },
+    "metrics": {
+      "auc": 0.6441833293984465,
+      "ks": 0.22966420282222177,
+      "rows_train": 8849,
+      "rows_test": 1466,
+      "base_rate_test": 0.08390177353342429,
+      "x_train_sha256": "3d7efe8e594af6e67f6305f734962f30566cf4bd67eb690ab1a2cb4092d88d30",
+      "test_pred_sha256": "a94aa4dbf0b34e02dd536e4792ecf756a2eb01cc82ef57a8495609e45b64a509"
+    },
+    "artifact_uri": "/Users/arya/Downloads/iceberg-ml-timetravel/artifacts/v4/model.txt",
+    "artifact_sha256": "87366c85e06cb2517ee33e2ba7946ede65021268411913cdc93812f81f364f67"
+  },
+  "snapshot_storage": {
+    "snapshots": 16,
+    "first_table_bytes": 25943.0,
+    "last_table_bytes": 364142.0,
+    "cumulative_retained_bytes": 415449.0,
+    "full_copy_cumulative_bytes": 3429333.0,
+    "savings_factor": 8.25452221572323,
+    "history_overhead_ratio": 1.140898330870924,
+    "avg_shared_pct_after_first": 84.00385889343866,
+    "largest_commit_bytes": 26314.0,
+    "largest_commit_snapshot_no": 9,
+    "total_removed_bytes": 0.0,
+    "operations": {
+      "append": 16
+    },
+    "files": [
+      "/Users/arya/Downloads/iceberg-ml-timetravel/reports/storage/snapshot_storage.csv",
+      "/Users/arya/Downloads/iceberg-ml-timetravel/reports/storage/snapshot_storage_growth.png",
+      "/Users/arya/Downloads/iceberg-ml-timetravel/reports/storage/snapshot_storage_changes.png"
+    ],
+    "reconciliation": {
+      "cumulative_from_summaries": 415449.0,
+      "retained_from_all_files": 415449,
+      "difference_bytes": 0.0
+    }
+  },
+  "retention": {
+    "guard": "passed",
+    "expire_cutoff": "2026-11-12 17:03:14",
+    "dry_run": false,
+    "expire_result": [
+      {
+        "deleted_data_files_count": 0,
+        "deleted_position_delete_files_count": 0,
+        "deleted_equality_delete_files_count": 0,
+        "deleted_manifest_files_count": 0,
+        "deleted_manifest_lists_count": 12,
+        "deleted_statistics_files_count": 0
+      }
+    ],
+    "guard_after": "passed",
+    "snapshots_before": 16,
+    "snapshots_after": 5,
+    "v1_snapshot_survived": true,
+    "untagged_old_snapshot_expired": true,
+    "guard_problems_now": []
+  },
+  "exact_retrain_after_retention": {
+    "a": "v1",
+    "b": "v1-retrain-after-retention",
+    "snapshot_a": 7431652255220510690,
+    "snapshot_b": 7431652255220510690,
+    "L1_same_data": true,
+    "L2_identical_predictions": true,
+    "L3_identical_model_file": true,
+    "fingerprint_a": {
+      "rows": 6628,
+      "hash": "-605161576688312285794"
+    },
+    "fingerprint_b": {
+      "rows": 6628,
+      "hash": "-605161576688312285794"
+    },
+    "artifact_sha_a": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607",
+    "artifact_sha_b": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607",
+    "max_abs_pred_diff": 0.0,
+    "n_probe": 5000
+  },
+  "storage_snapshot": {
+    "snapshots": 5,
+    "live_bytes": 364142,
+    "live_data_bytes": 364142,
+    "live_delete_bytes": 0,
+    "retained_bytes": 415449,
+    "retained_data_bytes": 415449,
+    "retained_delete_bytes": 0,
+    "metadata_bytes": 517357,
+    "data_dir_bytes": 418849,
+    "overhead_ratio": 1.140898330870924,
+    "overhead_ratio_incl_metadata": 2.561654519390787,
+    "orphan_bytes": 3400
+  },
+  "registry_rows": [
+    {
+      "model_version": "v1",
+      "snapshot_id": 7431652255220510690,
+      "data_fingerprint": "{'rows': 6628, 'hash': '-605161576688312285794'}",
+      "seed": 42,
+      "git_commit": "1de03852ad815af397051da8177c2bd8d4d5339f",
+      "artifact_sha256": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607"
+    },
+    {
+      "model_version": "v2",
+      "snapshot_id": 82184083117057911,
+      "data_fingerprint": "{'rows': 8849, 'hash': '-675267512289126839069'}",
+      "seed": 42,
+      "git_commit": "1de03852ad815af397051da8177c2bd8d4d5339f",
+      "artifact_sha256": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607"
+    },
+    {
+      "model_version": "v1-retrain",
+      "snapshot_id": 7431652255220510690,
+      "data_fingerprint": "{'rows': 6628, 'hash': '-605161576688312285794'}",
+      "seed": 42,
+      "git_commit": "1de03852ad815af397051da8177c2bd8d4d5339f",
+      "artifact_sha256": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607"
+    },
+    {
+      "model_version": "v3",
+      "snapshot_id": 3902170148261100002,
+      "data_fingerprint": "{'rows': 10315, 'hash': '-847015714686936129990'}",
+      "seed": 42,
+      "git_commit": "1de03852ad815af397051da8177c2bd8d4d5339f",
+      "artifact_sha256": "87366c85e06cb2517ee33e2ba7946ede65021268411913cdc93812f81f364f67"
+    },
+    {
+      "model_version": "v4",
+      "snapshot_id": 47185582335540035,
+      "data_fingerprint": "{'rows': 10315, 'hash': '-799569694128029089527'}",
+      "seed": 42,
+      "git_commit": "1de03852ad815af397051da8177c2bd8d4d5339f",
+      "artifact_sha256": "87366c85e06cb2517ee33e2ba7946ede65021268411913cdc93812f81f364f67"
+    },
+    {
+      "model_version": "v1-retrain-after-retention",
+      "snapshot_id": 7431652255220510690,
+      "data_fingerprint": "{'rows': 6628, 'hash': '-605161576688312285794'}",
+      "seed": 42,
+      "git_commit": "1de03852ad815af397051da8177c2bd8d4d5339f",
+      "artifact_sha256": "b3d19a326a4e3179f016d656633079772fc31277664ab1f7a056b7da291df607"
+    }
+  ],
+  "status_events": [
+    {
+      "model_version": "v1",
+      "status": "candidate",
+      "reason": "registered at training time",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:04.536903"
+    },
+    {
+      "model_version": "v2",
+      "status": "candidate",
+      "reason": "registered at training time",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:07.352945"
+    },
+    {
+      "model_version": "v1-retrain",
+      "status": "candidate",
+      "reason": "registered at training time",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:08.068198"
+    },
+    {
+      "model_version": "v3",
+      "status": "candidate",
+      "reason": "registered at training time",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:10.686972"
+    },
+    {
+      "model_version": "v3",
+      "status": "quarantined",
+      "reason": "trained on snapshot 3902170148261100002 at/after bad batch 2016-01: int_rate x100 and flipped labels",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:11.130492"
+    },
+    {
+      "model_version": "v4",
+      "status": "candidate",
+      "reason": "registered at training time",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:13.572753"
+    },
+    {
+      "model_version": "v1",
+      "status": "approved",
+      "reason": "passed validation",
+      "actor": "demo-approver",
+      "event_time": "2026-11-11 22:33:14.805968"
+    },
+    {
+      "model_version": "v1-retrain-after-retention",
+      "status": "candidate",
+      "reason": "registered at training time",
+      "actor": "demo",
+      "event_time": "2026-11-11 22:33:17.785766"
+    }
+  ],
+  "finished": "2026-11-11T17:03:18Z"
+}
