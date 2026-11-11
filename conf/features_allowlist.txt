@@ -1,4 +1,5 @@
 # Origination-time features ONLY (known when the loan was approved).
+<<<<<<< HEAD
 # Reviewed for leakage: nothing recorded after issuance (payments, recoveries, last_pymnt_d, out_prncp, ...).
 # Changing this file changes feature_list_sha256 in the model registry.
 # Every name below exists in the LendingClub extract this project was checked against (see tests/test_user_dataset_sample.py).
@@ -7,6 +8,14 @@ loan_amnt
 term
 int_rate
 installment
+=======
+# Reviewed for leakage: nothing recorded after issuance (payments, recoveries, last_pymnt_d, ...).
+# Changing this file changes feature_list_sha256 in the model registry.
+# Column names follow the common Kaggle LendingClub file; verify against your download.
+loan_amnt
+term
+int_rate
+>>>>>>> origin/main
 grade
 emp_length
 home_ownership
@@ -15,11 +24,20 @@ verification_status
 purpose
 dti
 delinq_2yrs
+<<<<<<< HEAD
 inq_last_6mths
+=======
+fico_range_low
+fico_range_high
+>>>>>>> origin/main
 open_acc
 pub_rec
 revol_bal
 revol_util
 total_acc
+<<<<<<< HEAD
 # Deliberately excluded: addr_state and zip_code (geographic proxies), emp_title/title/desc (free text),
 # and every post-origination field (total_pymnt, recoveries, last_pymnt_d, out_prncp, loan_status, ...).
+=======
+# Deliberately excluded: addr_state (geographic proxy), zip_code, and all post-origination fields.
+>>>>>>> origin/main

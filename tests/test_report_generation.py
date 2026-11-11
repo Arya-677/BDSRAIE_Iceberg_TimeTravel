@@ -2,7 +2,10 @@
 from pathlib import Path
 
 import pandas as pd
+<<<<<<< HEAD
 import pytest
+=======
+>>>>>>> origin/main
 
 from ttml.audit_report import build_markdown, load_junit, md_to_pdf
 
@@ -70,6 +73,7 @@ def test_unrecorded_engine_is_flagged(tmp_path):
 def test_demo_run_on_simulator_triggers_warning():
     md = build_markdown({**FAKE, "engine": "SIMULATOR"}, None, {}, None)
     assert "WARNING" in md
+<<<<<<< HEAD
 
 
 def test_synthetic_demo_is_flagged_in_the_report_and_real_dataset_is_named():
@@ -123,3 +127,5 @@ def test_pdf_renders_third_level_headings_instead_of_showing_hashes(tmp_path):
     except FileNotFoundError:
         pytest.skip("pdftotext not installed")
     assert "Sub heading here" in text and "###" not in text
+=======
+>>>>>>> origin/main

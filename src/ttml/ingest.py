@@ -1,7 +1,10 @@
 """Monthly batch ingest. One calendar month = one append commit = one Iceberg snapshot."""
 from __future__ import annotations
 
+<<<<<<< HEAD
 import gzip
+=======
+>>>>>>> origin/main
 import hashlib
 from pathlib import Path
 
@@ -30,6 +33,7 @@ def sha256_file(path: str | Path, chunk: int = 1 << 20) -> str:
     return h.hexdigest()
 
 
+<<<<<<< HEAD
 ID_CANDIDATES = ["id", "loan_id", "Id", "ID", "_c0", "Unnamed: 0"]      # '_c0' = Spark's name for a blank header cell
 
 
@@ -52,11 +56,15 @@ def resolve_id_column(columns: list[str]) -> str | None:
 
 
 def read_source_csv(spark: SparkSession, path: str, features: list[str], multiline: bool = True, sep: str | None = None) -> DataFrame:
+=======
+def read_source_csv(spark: SparkSession, path: str, features: list[str], multiline: bool = True) -> DataFrame:
+>>>>>>> origin/main
     """Read raw CSV as strings (no schema inference: faster, and clean() owns all parsing).
 
     multiLine=True because real LendingClub exports contain quoted free-text fields with embedded newlines
     (e.g. loan descriptions); without it rows are silently split and corrupted. It makes the read less parallel;
     set data.csv_multiline: false if your file has none and you need speed."""
+<<<<<<< HEAD
     r = spark.read.option("header", True).option("mode", "PERMISSIVE").option("sep", sep or sniff_delimiter(path))
     if multiline:
         r = r.option("multiLine", True).option("quote", '"').option("escape", '"')
@@ -77,6 +85,22 @@ def read_source_csv(spark: SparkSession, path: str, features: list[str], multili
 def load_clean_frame(spark: SparkSession, cfg: Config, csv_path: str) -> DataFrame:
     d = cfg.raw.get("data", {})
     return clean(read_source_csv(spark, csv_path, cfg.features(), d.get("csv_multiline", True), d.get("csv_sep")), cfg.features())
+=======
+    r = spark.read.option("header", True).option("mode", "PERMISSIVE")
+    if multiline:
+        r = r.option("multiLine", True).option("quote", '"').option("escape", '"')
+    raw = r.csv(path)
+    missing = [c for c in required_source_columns(features) if c not in raw.columns]
+    if missing:
+        raise ValueError(f"source file {path} is missing expected columns: {missing}. "
+                         "Check conf/features_allowlist.txt against the file header (names differ between Kaggle versions).")
+    return raw.select(*required_source_columns(features))
+
+
+def load_clean_frame(spark: SparkSession, cfg: Config, csv_path: str) -> DataFrame:
+    multiline = cfg.raw.get("data", {}).get("csv_multiline", True)
+    return clean(read_source_csv(spark, csv_path, cfg.features(), multiline), cfg.features())
+>>>>>>> origin/main
 
 
 def ingest_month(spark: SparkSession, cfg: Config, df_month: DataFrame, batch_id: str,
@@ -123,11 +147,16 @@ def ingest_month(spark: SparkSession, cfg: Config, df_month: DataFrame, batch_id
 
 
 def ingest_csv(spark: SparkSession, cfg: Config, csv_path: str, start: str | None = None,
+<<<<<<< HEAD
                end: str | None = None, max_months: int | None = None, skip_rejected: bool = False) -> list[int]:
     """Load a CSV month by month in chronological order. Returns the snapshot ids created.
 
     skip_rejected=True: a month the ingest gate rejects (typically a sparse recent month where most loans are still 'Current',
     leaving few rows and a skewed default rate) is reported and skipped instead of stopping the whole load."""
+=======
+               end: str | None = None, max_months: int | None = None) -> list[int]:
+    """Load a CSV month by month in chronological order. Returns the snapshot ids created."""
+>>>>>>> origin/main
     start = start or cfg.raw["data"]["start_month"]
     end = end or cfg.raw["data"]["end_month"]
     sha = sha256_file(csv_path)
@@ -139,6 +168,7 @@ def ingest_csv(spark: SparkSession, cfg: Config, csv_path: str, start: str | Non
     ids = []
     try:
         for m in months:
+<<<<<<< HEAD
             try:
                 sid = ingest_month(spark, cfg, df.filter(F.col("issue_month") == m), m, csv_path, sha)
             except BatchRejected as e:
@@ -147,6 +177,9 @@ def ingest_csv(spark: SparkSession, cfg: Config, csv_path: str, start: str | Non
                                                                  "in conf/pipeline.yaml, or choose another date range)"]) from None
                 print(f"[ingest] {m}: SKIPPED by the gate: {'; '.join(e.reasons)}")
                 continue
+=======
+            sid = ingest_month(spark, cfg, df.filter(F.col("issue_month") == m), m, csv_path, sha)
+>>>>>>> origin/main
             if sid is not None:
                 ids.append(sid)
     finally:

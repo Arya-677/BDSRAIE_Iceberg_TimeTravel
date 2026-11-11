@@ -27,7 +27,13 @@ reportlab==5.1.0
 scikit-learn==1.9.1
 scipy==1.18.1
 setuptools==84.2.1
+<<<<<<< HEAD
 threadpoolctl==3.8.0
 # Editable install with no version control (ttml==0.6.0)
 -e /Users/arya/Downloads/iceberg-ml-timetravel
+=======
+threadpoolctl==3.7.0
+# Editable install with no version control (ttml==0.5.0)
+-e /Users/arya/Downloads/iceberg-ml-timetravel 2
+>>>>>>> origin/main
 tzdata==2026.6

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Changes in 0.6.0 (storage by snapshot + the team's real dataset)
 
 New: storage difference between snapshots (requested by the professor)
@@ -26,6 +27,8 @@ Also (redone after a sandbox reset): `ttml demo --csv FILE --start YYYY-MM` runs
 months), `bash run.sh` option 5, automatic local git commit so model records carry a real commit (not `no-git`), Spark driver memory 4g
 (`spark.driver_memory` in conf/pipeline.yaml) for the full-size file, and the report names the dataset used and warns when it was synthetic.
 
+=======
+>>>>>>> origin/main
 # Changes in 0.5.0 (first real-Iceberg run on a Mac)
 
 Reported from the first run on real Iceberg (macOS, Java 11): 105 passed, 5 failed. All 5 had one cause:

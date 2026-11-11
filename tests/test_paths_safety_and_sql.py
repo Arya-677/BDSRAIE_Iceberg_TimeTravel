@@ -59,8 +59,13 @@ def test_quoted_multiline_text_field_does_not_corrupt_rows(spark, cfg, tmp_path)
         vals = {c: "" for c in cols}
         vals.update(id=str(i), issue_d="Jan-2016", loan_status="Fully Paid", desc=desc, loan_amnt="1000", term=" 36 months",
                     int_rate="10.5", grade="A", emp_length="2 years", home_ownership="RENT", annual_inc="50000",
+<<<<<<< HEAD
                     verification_status="Verified", purpose="car", dti="10", delinq_2yrs="0", installment="45.5",
                     inq_last_6mths="1", open_acc="5", pub_rec="0", revol_bal="100", revol_util="10", total_acc="9")
+=======
+                    verification_status="Verified", purpose="car", dti="10", delinq_2yrs="0", fico_range_low="700",
+                    fico_range_high="704", open_acc="5", pub_rec="0", revol_bal="100", revol_util="10", total_acc="9")
+>>>>>>> origin/main
         return ",".join('"' + vals[c].replace('"', '""') + '"' for c in cols)
 
     p = _write(tmp_path, ",".join(cols), [row(1, "line one\nline two, with comma"), row(2, 'he said "hi"'), row(3, "plain")])

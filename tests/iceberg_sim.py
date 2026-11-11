@@ -7,8 +7,12 @@ What it models: tables with immutable snapshots (parent chain, commit time), `ta
 metadata queries, time-travel reads by snapshot id, append commits, tags (create/replace/drop), and the procedures
 rollback_to_snapshot, expire_snapshots (older_than, retain_last, tag protection), rewrite_manifests.
 
+<<<<<<< HEAD
 Snapshot summaries are simulated with a FAKE size of 120 bytes per row (so the storage-report code can run in logic tests).
 What it does NOT model: real file layout/bytes, partitioning, UPDATE/MERGE, delete files, metadata tables other than
+=======
+What it does NOT model: file layout/bytes, partitioning, UPDATE/MERGE, delete files, metadata tables other than
+>>>>>>> origin/main
 snapshots/refs, concurrency, or any real Iceberg edge case. Passing here is NOT evidence that real Iceberg behaves
 the same. Run the suite with TTML_ICEBERG=1 against the real runtime before relying on any result.
 """
@@ -113,6 +117,7 @@ class SimSpark:
         t = self._t(name)
         df = df.select(*[df[f.name].cast(f.dataType).alias(f.name) for f in t["schema"].fields])    # by-name + type coercion
         cur = self._head_df(name) if t["head"] is not None else None
+<<<<<<< HEAD
         new = (df if cur is None else cur.unionByName(df)).localCheckpoint(eager=True)
         added, total = df.count(), new.count()
         prev_total = int(t["snaps"][t["head"]]["summary"]["total-records"]) if t["head"] is not None else 0
@@ -122,13 +127,23 @@ class SimSpark:
                            "summary": {"added-records": str(added), "total-records": str(total), "added-files-size": str(added * 120),
                                        "total-files-size": str(total * 120), "removed-files-size": "0", "added-data-files": "1",
                                        "total-data-files": str(len(t["snaps"]) + 1), "total-delete-files": "0"}}
+=======
+        new = df if cur is None else cur.unionByName(df)
+        sid = next(_ids)
+        t["snaps"][sid] = {"parent": t["head"], "ts": _now(), "df": new.localCheckpoint(eager=True), "op": "append"}
+>>>>>>> origin/main
         t["head"] = sid
 
     def _refresh_views(self, name):
         t = self._t(name)
         v = name.replace(".", "_")
+<<<<<<< HEAD
         rows = [(s["ts"], sid, s["parent"], s["op"], s["summary"]) for sid, s in sorted(t["snaps"].items(), key=lambda kv: kv[1]["ts"])]
         frame_from_rows(self._real, rows, "committed_at timestamp, snapshot_id bigint, parent_id bigint, operation string, summary map<string,string>") \
+=======
+        rows = [(s["ts"], sid, s["parent"], s["op"]) for sid, s in sorted(t["snaps"].items(), key=lambda kv: kv[1]["ts"])]
+        frame_from_rows(self._real, rows, "committed_at timestamp, snapshot_id bigint, parent_id bigint, operation string") \
+>>>>>>> origin/main
             .createOrReplaceTempView(f"sim_snapshots_{v}")
         refs = [("main", "BRANCH", t["head"], None)] if t["head"] is not None else []
         refs += [(n, "TAG", x["sid"], x["retain_ms"]) for n, x in t["tags"].items()]

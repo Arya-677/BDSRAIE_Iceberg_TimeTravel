@@ -1,7 +1,13 @@
 """Source-to-table schema: parsing LendingClub-style columns, target definition, table DDL.
 
+<<<<<<< HEAD
 Column names/format follow the commonly used LendingClub extracts: issue_d like 'Dec-2015' OR 'Dec-15' (Excel shortens it),
 term like ' 36 months', emp_length like '10+ years'. Verify against your download; adjust only this module if it differs.
+=======
+Column names/format follow the commonly used Kaggle LendingClub file
+(issue_d like 'Dec-2015', term like ' 36 months', emp_length like '10+ years').
+Verify against your download; adjust only this module if it differs.
+>>>>>>> origin/main
 """
 from __future__ import annotations
 
@@ -16,12 +22,17 @@ GOOD = ["Fully Paid", "Does not meet the credit policy. Status:Fully Paid"]
 BAD = ["Charged Off", "Does not meet the credit policy. Status:Charged Off"]
 
 NUMERIC_COLS = [
+<<<<<<< HEAD
     "loan_amnt", "int_rate", "installment", "annual_inc", "dti", "delinq_2yrs", "inq_last_6mths", "fico_range_low",
+=======
+    "loan_amnt", "int_rate", "annual_inc", "dti", "delinq_2yrs", "fico_range_low",
+>>>>>>> origin/main
     "fico_range_high", "open_acc", "pub_rec", "revol_bal", "revol_util", "total_acc",
 ]
 STRING_COLS = ["grade", "home_ownership", "verification_status", "purpose"]
 
 
+<<<<<<< HEAD
 def parse_issue_d(col):
     """'Jun-2017' or 'Jun-17' -> DATE 2017-06-01 (null if it does not look like Mon-YY / Mon-YYYY).
 
@@ -34,6 +45,8 @@ def parse_issue_d(col):
     return F.when(F.length(mon) == 3, F.to_date(F.concat(F.lit("01-"), mon, F.lit("-"), yr4), "dd-MMM-yyyy"))
 
 
+=======
+>>>>>>> origin/main
 def required_source_columns(features: list[str]) -> list[str]:
     """Raw columns we need to read. Everything else in the 150-column file is ignored on purpose."""
     base = {"id", "issue_d", "loan_status"}
@@ -54,7 +67,11 @@ def clean(df: DataFrame, features: list[str]) -> DataFrame:
 
     out = df.select(
         F.when(s("id").rlike(r"^\d+$"), s("id").cast("bigint")).alias("loan_id"),
+<<<<<<< HEAD
         parse_issue_d(s("issue_d")).alias("issue_d"),
+=======
+        F.to_date(F.concat(F.lit("01-"), s("issue_d")), "dd-MMM-yyyy").alias("issue_d"),
+>>>>>>> origin/main
         s("loan_status").alias("_status"),
         *[F.col(c) for c in features],
     )

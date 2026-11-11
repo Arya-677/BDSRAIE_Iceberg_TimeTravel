@@ -30,7 +30,10 @@ def get_spark(cfg: Config, warehouse: str | None = None, app_name: str = "ttml")
         .config(f"spark.sql.catalog.{cat}", "org.apache.iceberg.spark.SparkCatalog")
         .config(f"spark.sql.catalog.{cat}.type", c.get("type", "hadoop"))
         .config(f"spark.sql.catalog.{cat}.warehouse", wh)
+<<<<<<< HEAD
         .config("spark.driver.memory", str(cfg.raw.get("spark", {}).get("driver_memory", "4g")))   # real LendingClub data needs more than the 1g default
+=======
+>>>>>>> origin/main
         .config("spark.driver.bindAddress", "127.0.0.1")      # local mode: avoids hostname/VPN binding errors on macs
         .config("spark.driver.host", "127.0.0.1")
         .config("spark.sql.shuffle.partitions", "8")          # data is small; avoid 200 tiny tasks

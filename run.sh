@@ -98,6 +98,7 @@ setup() {
   ok "Setup complete"
 }
 
+<<<<<<< HEAD
 # Every model record stores the git commit of the code that trained it. Without a repo it says "no-git", which weakens the
 # audit story, so make sure the project is a git repo with everything committed (local only, nothing is uploaded anywhere).
 ensure_git() {
@@ -113,6 +114,8 @@ ensure_git() {
   fi
 }
 
+=======
+>>>>>>> origin/main
 export SPARK_LOCAL_IP=127.0.0.1       # avoids Spark hostname / VPN networking problems on macs
 export PYTHONUNBUFFERED=1
 
@@ -150,8 +153,11 @@ step_real() {
 }
 
 step_full() {
+<<<<<<< HEAD
   setup
   ensure_git
+=======
+>>>>>>> origin/main
   step_real
   say "Running the end-to-end demo (train, exact retrain, bad batch, rollback, retention)"
   run python -m ttml.cli demo || die "The demo failed."
@@ -177,7 +183,11 @@ import re
 s = re.sub(r"source_csv:.*", "source_csv: " + sys.argv[1], s, count=1)
 p.write_text(s, encoding="utf-8")
 PY
+<<<<<<< HEAD
   run python -m ttml.cli ingest --start "$start" --end "$end" --skip-rejected || die "ingest failed (the message above says which column or batch)."
+=======
+  run python -m ttml.cli ingest --start "$start" --end "$end" || die "ingest failed (the message above says which column or batch)."
+>>>>>>> origin/main
   run python -m ttml.cli snapshots
   say "Training v1 on the pinned snapshot, then retraining it exactly"
   run python -m ttml.cli train v1 --train-end "${end}-28" || die "training failed"
@@ -186,6 +196,7 @@ PY
   ok "Done. 'L1/L2/L3 true' above means the retrained model is identical."
 }
 
+<<<<<<< HEAD
 step_mydata() {   # bash run.sh mydata /path/to/lendingclub.csv [first-month]
   local csv="${1:-}" start="${2:-2013-01}"
   [ -n "$csv" ] && [ -f "$csv" ] || die "Usage: bash run.sh mydata /full/path/to/accepted_loans.csv [2013-01]"
@@ -215,6 +226,8 @@ step_storage() {   # storage per snapshot of whatever is currently loaded (optio
   if command -v open >/dev/null 2>&1; then open reports/storage/snapshot_storage_growth.png reports/storage/snapshot_storage_changes.png 2>/dev/null; fi
 }
 
+=======
+>>>>>>> origin/main
 menu() {
   cat <<'M'
 
@@ -222,20 +235,30 @@ menu() {
     1) Quick check             (installs everything, runs the basic tests: start here)
     2) Real Iceberg tests      (downloads Iceberg, runs the full test suite)
     3) FULL RUN                (tests + demo + experiments + audit report PDF)
+<<<<<<< HEAD
     4) Load my own LendingClub CSV and train on it   (quick)
     5) FULL RUN ON MY OWN DATA (demo + report built from your CSV: use this for your submission)
     6) Storage per snapshot: graphs + metrics (of the data currently loaded)
     7) Quit
 M
   printf "  Type 1-7 and press Enter: "; read -r c
+=======
+    4) Use my own LendingClub CSV
+    5) Quit
+M
+  printf "  Type 1-5 and press Enter: "; read -r c
+>>>>>>> origin/main
   case "$c" in
     1) step_check ;;
     2) step_real ;;
     3) step_full ;;
     4) printf "  Drag your CSV file into this window, then press Enter: "; read -r f; f="${f%\"}"; f="${f#\"}"; f="${f//\\ / }"; step_data "$f" ;;
+<<<<<<< HEAD
     5) printf "  Drag your CSV file into this window, then press Enter: "; read -r f; f="${f%\"}"; f="${f#\"}"; f="${f//\\ / }"
        printf "  First month to use (press Enter for 2013-01): "; read -r m; step_mydata "$f" "${m:-2013-01}" ;;
     6) step_storage ;;
+=======
+>>>>>>> origin/main
     *) exit 0 ;;
   esac
 }
@@ -247,8 +270,11 @@ case "${1:-menu}" in
   real)  step_real ;;
   full)  step_full ;;
   data)  shift; step_data "$@" ;;
+<<<<<<< HEAD
   mydata) shift; step_mydata "$@" ;;
   storage) step_storage ;;
+=======
+>>>>>>> origin/main
   setup) setup ;;
   menu|*) menu ;;
 esac

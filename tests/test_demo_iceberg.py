@@ -1,7 +1,10 @@
 """Runs the whole evidence story (src/ttml/demo.py) and asserts every headline claim the audit report makes.
     TTML_ICEBERG=sim pytest tests/test_demo_iceberg.py     (logic only)     TTML_ICEBERG=1 ... (authoritative)"""
 import json
+<<<<<<< HEAD
 from pathlib import Path
+=======
+>>>>>>> origin/main
 
 import pytest
 
@@ -17,8 +20,12 @@ def test_demo_end_to_end_makes_every_claim_the_report_relies_on(iceberg_spark, c
     assert e["L1_same_data"] and e["L2_identical_predictions"] and e["L3_identical_model_file"], e
     assert R["v1_vs_v2_differ"] and R["negative_control"]["differs"]
 
+<<<<<<< HEAD
     assert R["poisoned_batch"] == "2016-01" and R["dataset"]["kind"] == "synthetic"
     assert "2016-01" in [x["batch"] for x in R["audit_flagged"]]
+=======
+    assert [x["batch"] for x in R["audit_flagged"]] == ["2016-01"]
+>>>>>>> origin/main
     rb = R["rollback"]
     assert rb["fingerprint_matches_logged_good_state"] and rb["head_equals_pre_incident_fingerprint"]
     assert rb["bad_snapshot_still_listed"] and rb["models_quarantined"] == ["v3"]
@@ -31,6 +38,7 @@ def test_demo_end_to_end_makes_every_claim_the_report_relies_on(iceberg_spark, c
     e2 = R["exact_retrain_after_retention"]
     assert e2["L1_same_data"] and e2["L2_identical_predictions"] and e2["L3_identical_model_file"], e2
 
+<<<<<<< HEAD
     ss = R["snapshot_storage"]
     assert ss["snapshots"] >= 14 and all(Path(f).exists() for f in ss["files"]), ss        # per-snapshot storage captured before retention
     saved = json.loads((tmp_path / "demo_results.json").read_text())
@@ -52,3 +60,7 @@ def test_demo_explains_when_the_csv_lacks_the_needed_months(iceberg_spark, cfg, 
     p = write_csv(str(tmp_path / "short.csv"), start="2015-01", end="2015-05", rows_per_month=300, seed=3)
     with pytest.raises(ValueError, match="14 consecutive months"):
         run_demo(iceberg_spark, cfg, out_dir=str(tmp_path), csv=p, start="2015-01")
+=======
+    saved = json.loads((tmp_path / "demo_results.json").read_text())
+    assert saved["exact_retrain"]["L1_same_data"] is True
+>>>>>>> origin/main

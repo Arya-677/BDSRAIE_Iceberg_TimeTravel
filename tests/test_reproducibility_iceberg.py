@@ -187,6 +187,7 @@ def test_storage_experiments_run_end_to_end_small(real_iceberg_spark, cfg, tmp_p
     assert {"E1", "E2", "E3", "E4", "E5"} <= set(res.exp)
     assert (res.overhead_ratio.dropna() >= 1.0).all()
     assert (tmp_path / "storage_results.csv").exists()
+<<<<<<< HEAD
 
 
 def test_snapshot_storage_report_plumbing(env, cfg, tmp_path):
@@ -212,3 +213,5 @@ def test_snapshot_storage_report_on_real_iceberg(real_iceberg_spark, env, cfg, t
     assert last["added_bytes"] > 0 and last["removed_bytes"] > 0 and summary["history_overhead_ratio"] > 1.0
     retained = measure(s, t)["retained_bytes"]
     assert abs(summary["cumulative_retained_bytes"] - retained) <= 0.01 * retained, (summary["cumulative_retained_bytes"], retained)
+=======
+>>>>>>> origin/main

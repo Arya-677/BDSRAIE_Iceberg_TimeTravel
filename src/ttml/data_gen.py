@@ -35,7 +35,10 @@ def generate(start: str = "2015-01", end: str = "2015-12", rows_per_month: int =
         dti = np.clip(rng.normal(18, 8, n), 0, 60).round(2)
         annual_inc = np.exp(rng.normal(11.1, 0.5, n)).round(0)
         loan_amnt = (rng.integers(1, 40, n) * 1000).astype(float)
+<<<<<<< HEAD
         installment = np.round(loan_amnt * (int_rate / 1200) / (1 - (1 + int_rate / 1200) ** -36), 2)
+=======
+>>>>>>> origin/main
         fico = rng.integers(660, 820, n)
         logit = -3.0 + 0.12 * (int_rate - 12) + 0.025 * (dti - 18) - 0.01 * (fico - 700) + rng.normal(0, 0.5, n)
         p = 1 / (1 + np.exp(-logit))
@@ -46,8 +49,11 @@ def generate(start: str = "2015-01", end: str = "2015-12", rows_per_month: int =
         df = pd.DataFrame({
             "id": np.arange(next_id, next_id + n).astype(str),
             "loan_amnt": loan_amnt,
+<<<<<<< HEAD
             "installment": installment,
             "inq_last_6mths": rng.poisson(0.7, n).astype(float),
+=======
+>>>>>>> origin/main
             "term": rng.choice([" 36 months", " 60 months"], n, p=[0.75, 0.25]),
             "int_rate": int_rate,
             "grade": [GRADES[i] for i in grade_idx],
@@ -81,6 +87,7 @@ def generate(start: str = "2015-01", end: str = "2015-12", rows_per_month: int =
     return out
 
 
+<<<<<<< HEAD
 def _short_year(issue_d: str) -> str:
     return issue_d[:4] + issue_d[6:]          # 'Jun-2017' -> 'Jun-17'
 
@@ -102,6 +109,11 @@ def write_csv(path: str, style: str = "sample", **kw) -> str:
         df.to_csv(path, index=False)
     else:
         raise ValueError(f"unknown style {style!r}")
+=======
+def write_csv(path: str, **kw) -> str:
+    df = generate(**kw)
+    df.to_csv(path, index=False)
+>>>>>>> origin/main
     # Real LendingClub CSVs end with free-text footer lines; clean() must tolerate them.
     with open(path, "a", encoding="utf-8", newline="") as f:
         f.write('\nTotal amount funded in policy code 1: 123456789\n')

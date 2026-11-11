@@ -21,7 +21,10 @@ from pyspark.sql import functions as F
 from .config import Config
 from .data_gen import write_csv
 from .ingest import load_clean_frame
+<<<<<<< HEAD
 from . import snapshot_storage
+=======
+>>>>>>> origin/main
 from .schema import loans_ddl
 from .snapshots import split_table
 from .storage_metrics import measure
@@ -81,6 +84,7 @@ def run_all(spark: SparkSession, cfg: Config, out_dir: str = "reports/storage", 
     all_rows: list[dict] = []
 
     # E1
+<<<<<<< HEAD
     t_e1, rows = _series(spark, cfg, df, ms[:max(e1_checkpoints)], "e1_append_only", "copy-on-write", 0.0, set(e1_checkpoints), "E1")
     all_rows += rows
     snap_frames: dict = {}
@@ -92,15 +96,24 @@ def run_all(spark: SparkSession, cfg: Config, out_dir: str = "reports/storage", 
             print(f"[storage] per-snapshot report for {table} skipped: {type(e).__name__}: {e}")
 
     per_snapshot(t_e1, "e1_snapshot_storage", "append-only only", "E1 append-only monthly loads")
+=======
+    _, rows = _series(spark, cfg, df, ms[:max(e1_checkpoints)], "e1_append_only", "copy-on-write", 0.0, set(e1_checkpoints), "E1")
+    all_rows += rows
+>>>>>>> origin/main
     # E2 / E3
     rates = [0.001, 0.01, 0.05, 0.10]
     for mode, tag in (("copy-on-write", "E2"), ("merge-on-read", "E3")):
         for rate in rates:
             nm = f"{tag.lower()}_{int(rate * 1000)}pm"
+<<<<<<< HEAD
             t_x, rows = _series(spark, cfg, df, ms[:months], nm, mode, rate, {months}, tag)
             all_rows += rows
             if rate == 0.05:
                 per_snapshot(t_x, f"{tag.lower()}_snapshot_storage_5pct", f"{mode} + 5% monthly corrections", f"{tag} {mode}, 5% corrected monthly")
+=======
+            _, rows = _series(spark, cfg, df, ms[:months], nm, mode, rate, {months}, tag)
+            all_rows += rows
+>>>>>>> origin/main
     # E4 + E5 on a merge-on-read 1% table
     table, rows = _series(spark, cfg, df, ms[:months], "e45_mor_1pct", "merge-on-read", 0.01, {months}, "E4")
     cat, name = split_table(table)
@@ -123,8 +136,11 @@ def run_all(spark: SparkSession, cfg: Config, out_dir: str = "reports/storage", 
         all_rows.append({"exp": "E5", "mode": "merge-on-read", "update_rate": 0.01, "month_index": months, "retain_last": n,
                          **measure(spark, table)})
     df.unpersist()
+<<<<<<< HEAD
     if len(snap_frames) >= 2:
         snapshot_storage.compare_charts(snap_frames, str(out / "snapshot_storage_compare.png"))
+=======
+>>>>>>> origin/main
     res = pd.DataFrame(all_rows)
     res.to_csv(out / "storage_results.csv", index=False)
     charts(res, out)

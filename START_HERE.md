@@ -11,6 +11,7 @@
 
 If anything stops with `[STOPPED]`, send me the file `logs/last_run.log` (in the same folder).
 
+<<<<<<< HEAD
 Shortcuts: `bash run.sh check` | `bash run.sh full` | `bash run.sh mydata /path/to/file.csv` | `bash run.sh storage`
 Results: `reports/audit_readiness_report.pdf` (opens automatically at the end of option 3).
 
@@ -30,3 +31,7 @@ the data you loaded yourself, run option 4 and then option **6** (or `bash run.s
 - `snapshot_storage_changes.png`: bytes added/removed by each snapshot and how much is shared with the previous one
 - `snapshot_storage.csv`: the numbers. Compare two snapshots: `ttml snapshot-diff <id-a> <id-b>`
 - `snapshot_storage_compare.png` (from the experiments): append-only vs copy-on-write vs merge-on-read
+=======
+Shortcuts: `bash run.sh check` | `bash run.sh full` | `bash run.sh data /path/to/file.csv`
+Results: `reports/audit_readiness_report.pdf` (opens automatically at the end of option 3).
+>>>>>>> origin/main

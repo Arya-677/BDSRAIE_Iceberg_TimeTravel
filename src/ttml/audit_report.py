@@ -96,6 +96,7 @@ def _cell(col: str, v):
     return v
 
 
+<<<<<<< HEAD
 def _snapshot_storage_section(A, snap: pd.DataFrame | None, results: dict | None, reports_dir: str) -> None:
     from .snapshot_storage import fmt_bytes, summarize
     A("### 6.1 Storage difference between snapshots\n")
@@ -135,6 +136,10 @@ def _snapshot_storage_section(A, snap: pd.DataFrame | None, results: dict | None
 
 def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: dict, data_card: str | None,
                    reports_dir: str = "reports", snap_storage: pd.DataFrame | None = None) -> str:
+=======
+def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: dict, data_card: str | None,
+                   reports_dir: str = "reports") -> str:
+>>>>>>> origin/main
     L: list[str] = []
     A = L.append
     A("# Audit-Readiness Report: Time Travel for Reproducible ML\n")
@@ -144,10 +149,13 @@ def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: di
     if junit.get("__mode__") == "sim" or (results or {}).get("engine") == "SIMULATOR":
         A("> **WARNING: some or all results below were produced by the Iceberg SIMULATOR used for logic testing. "
           "They are NOT audit evidence. Rerun `scripts/run_demo.sh` against the real Iceberg runtime and regenerate this report.**\n")
+<<<<<<< HEAD
     ds = (results or {}).get("dataset") or {}
     if results and ds.get("kind") == "synthetic":
         A("> **NOTE: the demo evidence in sections 4, 5 and 7 was generated on SYNTHETIC data. It shows the machinery works; "
           "rerun on your real dataset (`bash run.sh`, option 5) before submitting.**\n")
+=======
+>>>>>>> origin/main
     A("## 1. Scope and control summary\n")
     A("A credit-default model is trained on loan data held in an Apache Iceberg table. The question an auditor asks is: "
       "*which exact data was this model trained on, and can you prove you can rebuild it?* The controls below answer it.\n")
@@ -171,9 +179,12 @@ def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: di
         A("NOT RUN: `reports/demo_results.json` not found. Run `python -m ttml.cli demo`.\n")
     else:
         e = results.get("exact_retrain", {})
+<<<<<<< HEAD
         if ds:
             A(f"Dataset used by this run: **{ds.get('kind')}**, file `{Path(str(ds.get('path'))).name}`, SHA-256 `{str(ds.get('sha256'))[:16]}...`, "
               f"{ds.get('rows_in_demo_months', 'n/a')} rows across the 14 demo months {results.get('months', ['?'])[0]} to {results.get('months', ['?'])[-1]}.\n")
+=======
+>>>>>>> origin/main
         A("Model **v1** was trained on snapshot "
           f"`{results.get('v1', {}).get('snapshot_id')}`. The table then moved on (later head `{results.get('head_after_more_months')}`). "
           "v1 was rebuilt using only its registry row.\n")
@@ -198,6 +209,7 @@ def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: di
     else:
         rb = results["rollback"]
         fl = results.get("audit_flagged", [])
+<<<<<<< HEAD
         pb = results.get("poisoned_batch")
         A(f"A deliberately bad month ({pb}: `int_rate` scaled x100, half the labels flipped) was loaded with the ingest gate bypassed to simulate a failure that slipped through. "
           "Model **v3** was then trained on the tainted table.\n")
@@ -207,6 +219,12 @@ def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: di
             ["Other batches flagged by the heuristic (possible false positives)", "info",
              ", ".join(results.get("audit_other_flags") if results.get("audit_other_flags") is not None
                        else [f.get("batch") for f in fl if f.get("batch") != pb]) or "none"],
+=======
+        A("A deliberately bad month (`int_rate` scaled x100, half the labels flipped) was loaded with the ingest gate bypassed to simulate a failure that slipped through. "
+          "Model **v3** was then trained on the tainted table.\n")
+        A(_md_table([
+            ["Post-hoc audit flagged the bad batch", _verdict(bool(fl) and fl[0].get("batch") == "2016-01"), fl[0].get("why", "") if fl else ""],
+>>>>>>> origin/main
             ["Models quarantined", _verdict(bool(rb.get("models_quarantined"))), ", ".join(rb.get("models_quarantined", []))],
             ["Rolled back to last good snapshot", "PASS", f"{rb.get('from')} -> {rb.get('rolled_back_to')}"],
             ["Head fingerprint equals fingerprint logged when that snapshot was good", _verdict(rb.get("fingerprint_matches_logged_good_state")), ""],
@@ -245,7 +263,10 @@ def build_markdown(results: dict | None, storage: pd.DataFrame | None, junit: di
           "(append-only near 1.0; copy-on-write grows faster than merge-on-read; compaction can raise retained bytes until old snapshots are expired), "
           "and say where they were not confirmed. Absolute values depend on file sizes and partitioning.\n")
 
+<<<<<<< HEAD
     _snapshot_storage_section(A, snap_storage, results, reports_dir)
+=======
+>>>>>>> origin/main
     A("## 7. Retention policy\n")
     A(_md_table([
         ["1 Release evidence", "approved/deployed models (and quarantined, for forensics)", "release_retention_days (placeholder 2555 = ~7 years; CONFIRM with compliance)", "tag with RETAIN"],
@@ -315,7 +336,10 @@ def md_to_pdf(md: str, out_pdf: str, base_dir: str = ".") -> None:
     st = {
         "p": ParagraphStyle("p", fontName=base, fontSize=9, leading=13, spaceAfter=5),
         "h1": ParagraphStyle("h1", fontName=bold, fontSize=17, leading=21, textColor=navy, spaceAfter=8),
+<<<<<<< HEAD
         "h3": ParagraphStyle("h3", fontName=bold, fontSize=10, leading=13, textColor=navy, spaceBefore=8, spaceAfter=3),
+=======
+>>>>>>> origin/main
         "h2": ParagraphStyle("h2", fontName=bold, fontSize=12, leading=15, textColor=colors.HexColor("#0F766E"), spaceBefore=10, spaceAfter=4),
         "li": ParagraphStyle("li", fontName=base, fontSize=9, leading=13, leftIndent=12, bulletIndent=2, spaceAfter=2),
         "cell": ParagraphStyle("cell", fontName=base, fontSize=7.4, leading=9.6),
@@ -356,8 +380,11 @@ def md_to_pdf(md: str, out_pdf: str, base_dir: str = ".") -> None:
                 story += [img, Spacer(1, 6)]
         elif ln.startswith("> "):
             story.append(Paragraph("<b>" + inline(ln[2:]) + "</b>", ParagraphStyle("warn", parent=st["p"], textColor=colors.HexColor("#B91C1C"))))
+<<<<<<< HEAD
         elif ln.startswith("### "):
             story.append(Paragraph(inline(ln[4:]), st["h3"]))
+=======
+>>>>>>> origin/main
         elif ln.startswith("# "):
             story.append(Paragraph(inline(ln[2:]), st["h1"]))
         elif ln.startswith("## "):
@@ -377,9 +404,13 @@ def generate(reports_dir: str = "reports") -> tuple[str, str]:
     sp = d / "storage" / "storage_results.csv"
     storage = pd.read_csv(sp) if sp.exists() else None
     card = (d / "data_card.md").read_text(encoding="utf-8") if (d / "data_card.md").exists() else None
+<<<<<<< HEAD
     snp = d / "storage" / "snapshot_storage.csv"
     snap = pd.read_csv(snp) if snp.exists() else None
     md = build_markdown(res, storage, load_junit(d / "junit.xml"), card, reports_dir=str(d), snap_storage=snap)
+=======
+    md = build_markdown(res, storage, load_junit(d / "junit.xml"), card, reports_dir=str(d))
+>>>>>>> origin/main
     mp, pp = d / "audit_readiness_report.md", d / "audit_readiness_report.pdf"
     mp.write_text(md, encoding="utf-8")
     md_to_pdf(md, str(pp), base_dir=str(d))

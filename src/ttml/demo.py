@@ -10,11 +10,17 @@ import json
 from datetime import timedelta
 from pathlib import Path
 
+<<<<<<< HEAD
 import pandas as pd
 
 from pyspark.sql import functions as F
 
 from . import registry, snapshot_storage
+=======
+from pyspark.sql import functions as F
+
+from . import registry
+>>>>>>> origin/main
 from .data_gen import write_csv
 from .faults import make_poisoned
 from .ingest import ingest_month, load_clean_frame, sha256_file
@@ -30,6 +36,7 @@ from .train import train
 SMALL = {"params": {"n_estimators": 60}}      # fast demo model; real runs use conf/pipeline.yaml
 
 
+<<<<<<< HEAD
 def _end_of(month: str) -> str:
     return pd.Period(month, freq="M").end_time.strftime("%Y-%m-%d")
 
@@ -44,10 +51,17 @@ def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800, cs
     R: dict = {"started": utc_naive().isoformat(timespec="seconds") + "Z",
                "engine": "SIMULATOR" if getattr(spark, "is_sim", False) else "iceberg",
                "months": months, "poisoned_batch": poisoned}
+=======
+def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800) -> dict:
+    out = Path(out_dir); out.mkdir(parents=True, exist_ok=True)
+    R: dict = {"started": utc_naive().isoformat(timespec="seconds") + "Z",
+               "engine": "SIMULATOR" if getattr(spark, "is_sim", False) else "iceberg"}
+>>>>>>> origin/main
     T = cfg.loans_table
     drop_all(spark, cfg)
     init_tables(spark, cfg)
 
+<<<<<<< HEAD
     if csv is None:
         csv = write_csv(str(out / "demo_synthetic.csv"), start=months[0], end=months[-1], rows_per_month=rows_per_month, seed=11)
         R["dataset"] = {"kind": "synthetic", "path": csv}
@@ -64,6 +78,13 @@ def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800, cs
     R["dataset"]["rows_in_demo_months"] = df.filter(F.col("issue_month").isin(months)).count()
     t_first, t_second = _end_of(months[5]), _end_of(months[11])       # train windows: first 6 months / first 12 months
     ov = lambda **k: {**SMALL, "train_end": t_first, **k}  # noqa: E731
+=======
+    csv = write_csv(str(out / "demo_synthetic.csv"), start="2015-01", end="2016-02", rows_per_month=rows_per_month, seed=11)
+    sha = sha256_file(csv)
+    df = load_clean_frame(spark, cfg, csv).cache()
+    months = [f"2015-{m:02d}" for m in range(1, 13)] + ["2016-01", "2016-02"]
+    ov = lambda **k: {**SMALL, "train_end": "2015-06-30", **k}  # noqa: E731
+>>>>>>> origin/main
     month = lambda m: df.filter(F.col("issue_month") == m)      # noqa: E731
     sid_of = {}
 
@@ -92,18 +113,29 @@ def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800, cs
     # 5. a bad month slips through the gate (bypass simulates the failure), then a clean month
     good_head = current_snapshot_id(spark, T)
     good_fp = fingerprint(read_at_snapshot(spark, T, good_head))
+<<<<<<< HEAD
     bad_sid = ingest_month(spark, cfg, make_poisoned(month(poisoned)), poisoned, csv, sha, bypass_gate=True)
     ingest_month(spark, cfg, month(months[13]), months[13], csv, sha)
     R["v3_tainted"] = train(spark, cfg, "v3", overrides=ov(train_end=t_second), trained_by="demo")
+=======
+    bad_sid = ingest_month(spark, cfg, make_poisoned(month("2016-01")), "2016-01", csv, sha, bypass_gate=True)
+    ingest_month(spark, cfg, month("2016-02"), "2016-02", csv, sha)
+    R["v3_tainted"] = train(spark, cfg, "v3", overrides=ov(train_end="2015-12-31"), trained_by="demo")
+>>>>>>> origin/main
 
     # 6. detect, contain, roll back, prove
     flagged = audit_batches(spark, cfg)
     R["audit_flagged"] = flagged.to_dict("records")
+<<<<<<< HEAD
     hit = flagged[flagged["batch"] == poisoned]
     if hit.empty:
         raise RuntimeError(f"the post-hoc audit did not flag the poisoned batch {poisoned}; it flagged: {flagged['batch'].tolist()}")
     R["audit_other_flags"] = [x for x in flagged["batch"].tolist() if x != poisoned]    # possible false positives on real data
     R["rollback"] = rollback_workflow(spark, cfg, int(hit.iloc[0]["snapshot_id"]), poisoned,
+=======
+    assert len(flagged) and flagged.iloc[0]["batch"] == "2016-01", "audit did not flag the poisoned batch"
+    R["rollback"] = rollback_workflow(spark, cfg, int(flagged.iloc[0]["snapshot_id"]), "2016-01",
+>>>>>>> origin/main
                                       "int_rate x100 and flipped labels", actor="demo")
     R["rollback"]["head_equals_pre_incident_fingerprint"] = fingerprint(spark.table(T)) == good_fp
     R["rollback"]["bad_snapshot_still_listed"] = snapshot_exists(spark, T, bad_sid)
@@ -112,6 +144,7 @@ def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800, cs
     # 7. repair: corrected months, clean model
     for m in months[12:]:
         ingest_month(spark, cfg, month(m), m, csv, sha)
+<<<<<<< HEAD
     R["v4_clean"] = train(spark, cfg, "v4", overrides=ov(train_end=t_second), trained_by="demo")
 
     # 7b. storage difference between snapshots, captured BEFORE retention expires any of them
@@ -126,6 +159,9 @@ def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800, cs
         R["snapshot_storage"] = ssum
     except Exception as e:
         R["snapshot_storage"] = {"unavailable": f"{type(e).__name__}: {str(e)[:200]}"}
+=======
+    R["v4_clean"] = train(spark, cfg, "v4", overrides=ov(train_end="2015-12-31"), trained_by="demo")
+>>>>>>> origin/main
 
     # 8. approve v1 -> tier-1 retention; run retention; evidence must survive
     promote(spark, cfg, "v1", "approved", "demo-approver", "passed validation")
@@ -136,7 +172,11 @@ def run_demo(spark, cfg, out_dir: str = "reports", rows_per_month: int = 800, cs
     v1_sid = R["v1"]["snapshot_id"]
     R["retention"].update({"snapshots_before": len(before), "snapshots_after": len(after),
                            "v1_snapshot_survived": snapshot_exists(spark, T, v1_sid),
+<<<<<<< HEAD
                            "untagged_old_snapshot_expired": not snapshot_exists(spark, T, sid_of[months[1]]),
+=======
+                           "untagged_old_snapshot_expired": not snapshot_exists(spark, T, sid_of["2015-02"]),
+>>>>>>> origin/main
                            "guard_problems_now": check_guard(spark, cfg)})
 
     # 9. retrain v1 AFTER retention: still exact

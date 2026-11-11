@@ -18,7 +18,10 @@ tables:
 data:
   source_csv: data/raw/accepted_2007_to_2018Q4.csv    # or a synthetic file from `ttml gen-data`
   features_allowlist: conf/features_allowlist.txt
+<<<<<<< HEAD
   csv_sep: null                     # null = detect (comma, tab, semicolon or pipe); set "," or "\t" to force
+=======
+>>>>>>> origin/main
   csv_multiline: true               # real LendingClub text fields contain newlines; false = faster if yours has none
   start_month: "2012-01"            # inclusive; develop on a slice, widen later
   end_month: "2016-12"              # inclusive
@@ -62,6 +65,9 @@ retention:
 
 ingest:
   log_table_fingerprint: true       # fingerprint the whole table after each month (needed to PROVE rollback); false for huge loads
+<<<<<<< HEAD
 
 spark:
   driver_memory: 4g                 # raise (e.g. 8g) for the full 2M-row LendingClub file if you have the RAM; lower on small laptops
+=======
+>>>>>>> origin/main

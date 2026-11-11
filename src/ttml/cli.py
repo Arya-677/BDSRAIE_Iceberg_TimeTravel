@@ -25,7 +25,10 @@ def main(argv=None):
     i.add_argument("--start")
     i.add_argument("--end")
     i.add_argument("--max-months", type=int)
+<<<<<<< HEAD
     i.add_argument("--skip-rejected", action="store_true", help="skip months the ingest gate rejects instead of stopping")
+=======
+>>>>>>> origin/main
 
     t = sub.add_parser("train", help="train a model on a pinned snapshot and register it")
     t.add_argument("version")
@@ -47,6 +50,7 @@ def main(argv=None):
     ex.add_argument("--quick", action="store_true"); ex.add_argument("--months", type=int, default=24)
     ex.add_argument("--rows-per-month", type=int, default=2000); ex.add_argument("--out", default="reports/storage")
     dm = sub.add_parser("demo", help="end-to-end evidence run -> reports/demo_results.json")
+<<<<<<< HEAD
     dm.add_argument("--rows-per-month", type=int, default=800, help="synthetic data only")
     dm.add_argument("--csv", help="use YOUR file (e.g. LendingClub accepted loans) instead of synthetic data")
     dm.add_argument("--start", default=None, help="first of 14 consecutive months to use (default 2015-01 synthetic / data.start_month for --csv)")
@@ -54,6 +58,9 @@ def main(argv=None):
     ss.add_argument("--table", help="default: the loans table"); ss.add_argument("--out", default="reports/storage")
     sd = sub.add_parser("snapshot-diff", help="storage difference between two snapshot ids")
     sd.add_argument("a", type=int); sd.add_argument("b", type=int); sd.add_argument("--table", help="default: the loans table")
+=======
+    dm.add_argument("--rows-per-month", type=int, default=800)
+>>>>>>> origin/main
     sub.add_parser("report", help="build reports/audit_readiness_report.md/.pdf from evidence files (no Spark needed)")
 
     sub.add_parser("snapshots", help="list snapshots of the loans table")
@@ -83,7 +90,11 @@ def main(argv=None):
         print("tables ready")
     elif a.cmd == "ingest":
         from .ingest import ingest_csv
+<<<<<<< HEAD
         ids = ingest_csv(spark, cfg, str(cfg.path(a.csv or cfg.raw["data"]["source_csv"])), a.start, a.end, a.max_months, skip_rejected=a.skip_rejected)
+=======
+        ids = ingest_csv(spark, cfg, str(cfg.path(a.csv or cfg.raw["data"]["source_csv"])), a.start, a.end, a.max_months)
+>>>>>>> origin/main
         print(f"{len(ids)} snapshots created")
     elif a.cmd == "train":
         from .train import train
@@ -115,13 +126,18 @@ def main(argv=None):
         print(run_all(spark, cfg, str(cfg.path(a.out)), months=a.months, rows_per_month=a.rows_per_month, quick=a.quick).to_string())
     elif a.cmd == "demo":
         from .demo import run_demo
+<<<<<<< HEAD
         R = run_demo(spark, cfg, out_dir=str(cfg.path("reports")), rows_per_month=a.rows_per_month,
                      csv=str(cfg.path(a.csv)) if a.csv else None,
                      start=a.start or (cfg.raw["data"]["start_month"] if a.csv else "2015-01"))
+=======
+        R = run_demo(spark, cfg, out_dir=str(cfg.path("reports")), rows_per_month=a.rows_per_month)
+>>>>>>> origin/main
         e = R["exact_retrain"]
         print("exact retrain  L1:", e["L1_same_data"], " L2:", e["L2_identical_predictions"], " L3:", e["L3_identical_model_file"])
         print("rollback verified:", R["rollback"]["fingerprint_matches_logged_good_state"], " models quarantined:", R["rollback"]["models_quarantined"])
         print("wrote reports/demo_results.json")
+<<<<<<< HEAD
     elif a.cmd == "snapshot-storage":
         from .snapshot_storage import fmt_bytes, write_report
         s, _ = write_report(spark, a.table or cfg.loans_table, str(cfg.path(a.out)))
@@ -135,6 +151,8 @@ def main(argv=None):
         import json
         from .snapshot_storage import derive, diff_between, read_summaries
         print(json.dumps(diff_between(derive(read_summaries(spark, a.table or cfg.loans_table)), a.a, a.b), indent=2))
+=======
+>>>>>>> origin/main
     elif a.cmd == "snapshots":
         from .snapshots import list_snapshots
         print(list_snapshots(spark, cfg.loans_table).to_string(index=False))

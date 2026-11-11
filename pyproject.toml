@@ -4,7 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ttml"
+<<<<<<< HEAD
 version = "0.6.0"
+=======
+version = "0.5.0"
+>>>>>>> origin/main
 description = "Time Travel for Reproducible ML on Apache Iceberg"
 requires-python = ">=3.10"
 dependencies = [

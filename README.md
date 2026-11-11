@@ -30,7 +30,10 @@ If you still see worker errors, check:
 | Bad-batch injection, post-hoc audit, quarantine + rollback + proof | `faults.py`, `rollback.py` |
 | Tiered retention + safety guard | `retention.py` |
 | Storage overhead measurement and experiments E1-E5 | `storage_metrics.py`, `storage_experiments.py` |
+<<<<<<< HEAD
 | Storage of every snapshot: table size, added/removed per commit, sharing, cost vs full copies (graphs + CSV) | `snapshot_storage.py` |
+=======
+>>>>>>> origin/main
 | End-to-end evidence run | `demo.py` |
 | Audit-readiness report (MD + PDF) from evidence files | `audit_report.py` |
 
@@ -92,7 +95,11 @@ TTML_ICEBERG=1 pytest -m iceberg -q # end-to-end T1-T6 + rollback, retention gua
 - `training.release_retention_days: 2555` is a placeholder; confirm the real retention requirement.
 - Reproducibility is claimed for one environment (same library versions and CPU architecture). Say so in the report.
 - Storage-experiment updates are synthetic. Run on a larger dataset than the defaults before drawing conclusions.
+<<<<<<< HEAD
 
 ## Your dataset
 The project is checked against the team's LendingClub extract (blank-header id column, `Jun-17` dates, no fico columns, tab or comma
 separated). See `tests/test_user_dataset_sample.py`. Columns used: `conf/features_allowlist.txt`. Run `bash run.sh`, option 5.
+=======
+# BDSRAIE_Iceberg_TimeTravel
+>>>>>>> origin/main
